@@ -14,17 +14,21 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 //WebSocket的配置資訊
 @Configuration
-@EnableWebSocketMessageBroker //啟用STOMP
+@EnableWebSocketMessageBroker //啟用 STOMP 協議的 WebSocket 支援
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 	//定義訊息路由規則
 	@Override
 	public void configureMessageBroker(MessageBrokerRegistry registry) {
-		registry.enableSimpleBroker("/topic");	//發送到以 /topic 開頭的目的地訊息, 訊息代理的前綴字(例如:/topic/messages)
-		registry.setApplicationDestinationPrefixes("/app");//應用程式前綴，前端發送"/app/chat"會被對應到@MessageChat("/chat")
+		//設定訊息代理前綴，處理廣播(所有發送到 /topic 開頭的訊息都會被廣播(例如:/topic/messages))
+		registry.enableSimpleBroker("/topic");
+		//設定應用程式訊息前綴(前端發送到 /app 開頭的訊息會被路由到對應的 @MessageMapping("/chat")方法)
+		registry.setApplicationDestinationPrefixes("/app");
 	}
 	
 	@Override
 	public void registerStompEndpoints(StompEndpointRegistry registry) {
+		// 註冊 WebSocket 端點，支援 SockJS
+		//index.html裡面的建立連線--var socket = new SockJS('/chat-websocket');
 		registry.addEndpoint("/chat-websocket").withSockJS();	//WebSocket端點
 	}
 
