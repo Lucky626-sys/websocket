@@ -22,6 +22,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer{
 		//設定訊息代理前綴，處理廣播(所有發送到 /topic 開頭的訊息都會被廣播(例如:/topic/messages))
 		registry.enableSimpleBroker("/topic");
 		//設定應用程式訊息前綴(前端發送到 /app 開頭的訊息會被路由到對應的 @MessageMapping("/chat")方法)
+		//對應到index.html的起始--stompClient.send("/app/chat", {}, JSON.stringify({'from' : from, 'content' : content}));
 		registry.setApplicationDestinationPrefixes("/app");
 	}
 	
